@@ -69,20 +69,40 @@ echo "${VERSION}" > ${template_dist_dir}/version
 echo "------------------------------------------------------------------------------"
 echo "[Packing] Templates"
 echo "------------------------------------------------------------------------------"
-for file in $template_dir/*.template
+for file in "$template_dir"/*.template
 do
     echo "cp $file $template_dist_dir/"
-    cp $file $template_dist_dir/
+    cp "$file" "$template_dist_dir/"
 done
 
 echo "------------------------------------------------------------------------------"
 echo "[Updating Source Bucket name]"
 echo "------------------------------------------------------------------------------" 
+# replace="s/%%BUCKET_NAME%%/$BUCKET_NAME/g"
+# for file in $template_dist_dir/*.template
+# do
+#     echo "sedi $replace $file" 
+#     sedi $replace $file
+# done
+# Detect platform and define sedi
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    # macOS
+    function sedi() {
+        sed -i '' "$@"
+    }
+else
+    # Linux
+    function sedi() {
+        sed -i "$@"
+    }
+fi
+
 replace="s/%%BUCKET_NAME%%/$BUCKET_NAME/g"
-for file in $template_dist_dir/*.template
+shopt -s nullglob
+for file in "$template_dist_dir"/*.template
 do
-    echo "sedi $replace $file" 
-    sedi $replace $file
+    echo "sedi $replace $file"
+    sedi "$replace" "$file"
 done
 
 echo "------------------------------------------------------------------------------" 
@@ -119,13 +139,13 @@ echo "--------------------------------------------------------------------------
 echo "[Rebuild] Web UI"
 echo "------------------------------------------------------------------------------"
 
-mkdir -p $build_dist_dir/web
+mkdir -p "$build_dist_dir/web"
 
 echo "------------------------------------------------------------------------------"
 echo "[Rebuild] extractaudio"
 echo "------------------------------------------------------------------------------"
-cd $source_dir/web
-echo $PWD
+cd "$source_dir/web"
+echo "$PWD"
 npm install --production --legacy-peer-deps
 build_status=$? 
 if [ ${build_status} != '0' ]; then 
@@ -142,7 +162,7 @@ cp -f node_modules/handlebars/dist/handlebars.min.js js/
 cp -f node_modules/jquery/dist/jquery.min.js js/
 cp -f node_modules/datatables.net/js/jquery.dataTables.min.js js/
 cp -f node_modules/vanilla-router/dist/vanilla-router.js js/
-cp -R $source_dir/web/* $build_dist_dir/web
+cp -R "$source_dir/web/"* "$build_dist_dir/web"
 rm -f js/axios.min.js
 rm -f js/bootstrap.min.js
 rm -f js/dataTables.bootstrap4.min.js
@@ -158,12 +178,12 @@ echo "[Rebuild] Lambda function"
 echo "------------------------------------------------------------------------------"
 
 # echo $source_dir
-mkdir -p $build_dist_dir/lambda
+mkdir -p "$build_dist_dir/lambda"
 
 echo "------------------------------------------------------------------------------"
 echo "[Rebuild] extractaudio"
 echo "------------------------------------------------------------------------------"
-cd $source_dir/lambda/extractaudio
+cd "$source_dir/lambda/extractaudio"
 echo $PWD
 npm install --production --legacy-peer-deps
 build_status=$? 
@@ -171,12 +191,12 @@ if [ ${build_status} != '0' ]; then
     echo "Error occurred in building Helper. Error Code: ${build_status}" 
     exit ${build_status} 
 fi
-zip -q -r9 $build_dist_dir/lambda/ExtractAudio.zip *
+zip -q -r9 "$build_dist_dir/lambda/ExtractAudio.zip" *
 
 echo "------------------------------------------------------------------------------"
 echo "[Rebuild] putlanguage"
 echo "------------------------------------------------------------------------------"
-cd $source_dir/lambda/putlanguage
+cd "$source_dir/lambda/putlanguage"
 echo $PWD
 npm install --production --legacy-peer-deps
 build_status=$? 
@@ -184,184 +204,184 @@ if [ ${build_status} != '0' ]; then
     echo "Error occurred in building Helper. Error Code: ${build_status}" 
     exit ${build_status} 
 fi
-zip -q -r9 $build_dist_dir/lambda/PutLanguage.zip *
+zip -q -r9 "$build_dist_dir/lambda/PutLanguage.zip" *
 
 echo "------------------------------------------------------------------------------"
 echo "[Rebuild] transcribeaudio"
 echo "------------------------------------------------------------------------------"
-cd $source_dir/lambda/transcribeaudio
+cd "$source_dir/lambda/transcribeaudio"
 npm install --production --legacy-peer-deps
 build_status=$? 
 if [ ${build_status} != '0' ]; then 
     echo "Error occurred in building Helper. Error Code: ${build_status}" 
     exit ${build_status} 
 fi
-zip -q -r9 $build_dist_dir/lambda/TranscribeAudio.zip *
+zip -q -r9 "$build_dist_dir/lambda/TranscribeAudio.zip" *
+
 
 echo "------------------------------------------------------------------------------"
 echo "[Rebuild] translatecaptions"
 echo "------------------------------------------------------------------------------"
-cd $source_dir/lambda/translatecaptions
-zip -q -r9 $build_dist_dir/lambda/TranslateCaptions.zip *
+cd "$source_dir/lambda/translatecaptions"
+zip -q -r9 "$build_dist_dir/lambda/TranslateCaptions.zip" *
 
 echo "------------------------------------------------------------------------------"
 echo "[Rebuild] batchcomplete"
 echo "------------------------------------------------------------------------------"
-cd $source_dir/lambda/batchcomplete
-zip -q -r9 $build_dist_dir/lambda/BatchComplete.zip *
+cd "$source_dir/lambda/batchcomplete"
+zip -q -r9 "$build_dist_dir/lambda/BatchComplete.zip" *
 
 echo "------------------------------------------------------------------------------"
 echo "[Rebuild] createcaptions"
 echo "------------------------------------------------------------------------------"
-cd $source_dir/lambda/createcaptions
+cd "$source_dir/lambda/createcaptions"
 npm install --production --legacy-peer-deps
 build_status=$? 
 if [ ${build_status} != '0' ]; then 
     echo "Error occurred in building Helper. Error Code: ${build_status}" 
     exit ${build_status} 
 fi
-zip -q -r9 $build_dist_dir/lambda/CreateCaptions.zip *
+zip -q -r9 "$build_dist_dir/lambda/CreateCaptions.zip" *
 
 echo "------------------------------------------------------------------------------"
 echo "[Rebuild] bootstrap"
 echo "------------------------------------------------------------------------------"
-cd $source_dir/lambda/bootstrap
-zip -q -r9 $build_dist_dir/lambda/BootStrap.zip *
+cd "$source_dir/lambda/bootstrap"
+zip -q -r9 "$build_dist_dir/lambda/BootStrap.zip" *
 
 echo "------------------------------------------------------------------------------"
 echo "[Rebuild] burncaption"
 echo "------------------------------------------------------------------------------"
-cd $source_dir/lambda/burncaption
-zip -q -r9 $build_dist_dir/lambda/BurnCaption.zip *
+cd "$source_dir/lambda/burncaption"
+zip -q -r9 "$build_dist_dir/lambda/BurnCaption.zip" *
 
 echo "------------------------------------------------------------------------------"
 echo "[Rebuild] customresource"
 echo "------------------------------------------------------------------------------"
-cd $source_dir/lambda/customresource
+cd "$source_dir/lambda/customresource"
 npm install --production --legacy-peer-deps
 build_status=$? 
 if [ ${build_status} != '0' ]; then 
     echo "Error occurred in building Helper. Error Code: ${build_status}" 
     exit ${build_status} 
 fi
-zip -q -r9 $build_dist_dir/lambda/CustomResource.zip *
+zip -q -r9 "$build_dist_dir/lambda/CustomResource.zip" *
 
 echo "------------------------------------------------------------------------------"
 echo "[Rebuild] deletevideo"
 echo "------------------------------------------------------------------------------"
-cd $source_dir/lambda/deletevideo
-zip -q -r9 $build_dist_dir/lambda/DeleteVideo.zip *
+cd "$source_dir/lambda/deletevideo"
+zip -q -r9 "$build_dist_dir/lambda/DeleteVideo.zip" *
 
 echo "------------------------------------------------------------------------------"
 echo "[Rebuild] getcaption"
 echo "------------------------------------------------------------------------------"
-cd $source_dir/lambda/getcaption
-zip -q -r9 $build_dist_dir/lambda/GetCaption.zip *
+cd "$source_dir/lambda/getcaption"
+zip -q -r9 "$build_dist_dir/lambda/GetCaption.zip" *
 
 echo "------------------------------------------------------------------------------"
 echo "[Rebuild] gettweaks"
 echo "------------------------------------------------------------------------------"
-cd $source_dir/lambda/gettweaks
-zip -q -r9 $build_dist_dir/lambda/GetTweaks.zip *
+cd "$source_dir/lambda/gettweaks"
+zip -q -r9 "$build_dist_dir/lambda/GetTweaks.zip" *
 
 echo "------------------------------------------------------------------------------"
 echo "[Rebuild] getupload"
 echo "------------------------------------------------------------------------------"
-cd $source_dir/lambda/getupload
-zip -q -r9 $build_dist_dir/lambda/GetUpload.zip *
+cd "$source_dir/lambda/getupload"
+zip -q -r9 "$build_dist_dir/lambda/GetUpload.zip" *
 
 echo "------------------------------------------------------------------------------"
 echo "[Rebuild] getvideo"
 echo "------------------------------------------------------------------------------"
-cd $source_dir/lambda/getvideo
-zip -q -r9 $build_dist_dir/lambda/GetVideo.zip *
+cd "$source_dir/lambda/getvideo"
+zip -q -r9 "$build_dist_dir/lambda/GetVideo.zip" *
 
 echo "------------------------------------------------------------------------------"
 echo "[Rebuild] getvideos"
 echo "------------------------------------------------------------------------------"
-cd $source_dir/lambda/getvideos
-zip -q -r9 $build_dist_dir/lambda/GetVideos.zip *
+cd "$source_dir/lambda/getvideos"
+zip -q -r9 "$build_dist_dir/lambda/GetVideos.zip" *
 
 echo "------------------------------------------------------------------------------"
 echo "[Rebuild] getvocabulary"
 echo "------------------------------------------------------------------------------"
-cd $source_dir/lambda/getvocabulary
-zip -q -r9 $build_dist_dir/lambda/GetVocabulary.zip *
+cd "$source_dir/lambda/getvocabulary"
+zip -q -r9 "$build_dist_dir/lambda/GetVocabulary.zip" *
 
 echo "------------------------------------------------------------------------------"
 echo "[Rebuild] headvocabulary"
 echo "------------------------------------------------------------------------------"
-cd $source_dir/lambda/headvocabulary
-zip -q -r9 $build_dist_dir/lambda/HeadVocabulary.zip *
+cd "$source_dir/lambda/headvocabulary"
+zip -q -r9 "$build_dist_dir/lambda/HeadVocabulary.zip" *
 
 echo "------------------------------------------------------------------------------"
 echo "[Rebuild] putcaption"
 echo "------------------------------------------------------------------------------"
-cd $source_dir/lambda/putcaption
-zip -q -r9 $build_dist_dir/lambda/PutCaption.zip *
+cd "$source_dir/lambda/putcaption"
+zip -q -r9 "$build_dist_dir/lambda/PutCaption.zip" *
 
 echo "------------------------------------------------------------------------------"
 echo "[Rebuild] puttweaks"
 echo "------------------------------------------------------------------------------"
-cd $source_dir/lambda/puttweaks
-zip -q -r9 $build_dist_dir/lambda/PutTweaks.zip *
+cd "$source_dir/lambda/puttweaks"
+zip -q -r9 "$build_dist_dir/lambda/PutTweaks.zip" *
 
 echo "------------------------------------------------------------------------------"
 echo "[Rebuild] putvocabulary"
 echo "------------------------------------------------------------------------------"
-cd $source_dir/lambda/putvocabulary
-zip -q -r9 $build_dist_dir/lambda/PutVocabulary.zip *
+cd "$source_dir/lambda/putvocabulary"
+zip -q -r9 "$build_dist_dir/lambda/PutVocabulary.zip" *
 
 echo "------------------------------------------------------------------------------"
 echo "[Rebuild] reprocessvideo"
 echo "------------------------------------------------------------------------------"
-cd $source_dir/lambda/reprocessvideo
+cd "$source_dir/lambda/reprocessvideo"
 npm install --production --legacy-peer-deps
 build_status=$? 
 if [ ${build_status} != '0' ]; then 
     echo "Error occurred in building Helper. Error Code: ${build_status}" 
     exit ${build_status} 
 fi
-zip -q -r9 $build_dist_dir/lambda/ReprocessVideo.zip *
+zip -q -r9 "$build_dist_dir/lambda/ReprocessVideo.zip" *
 
 echo "------------------------------------------------------------------------------"
 echo "[Rebuild] updatevideodescription"
 echo "------------------------------------------------------------------------------"
-cd $source_dir/lambda/updatevideodescription
-zip -q -r9 $build_dist_dir/lambda/UpdateVideoDescription.zip *
+cd "$source_dir/lambda/updatevideodescription"
+zip -q -r9 "$build_dist_dir/lambda/UpdateVideoDescription.zip" *
 
 echo "------------------------------------------------------------------------------"
 echo "[Rebuild] updatevideolanguage"
 echo "------------------------------------------------------------------------------"
-cd $source_dir/lambda/updatevideolanguage
-zip -q -r9 $build_dist_dir/lambda/UpdateVideoLanguage.zip *
+cd "$source_dir/lambda/updatevideolanguage"
+zip -q -r9 "$build_dist_dir/lambda/UpdateVideoLanguage.zip" *
 
 echo "------------------------------------------------------------------------------"
 echo "[Rebuild] updatevideoname"
 echo "------------------------------------------------------------------------------"
-cd $source_dir/lambda/updatevideoname
-zip -q -r9 $build_dist_dir/lambda/UpdateVideoName.zip *
+cd "$source_dir/lambda/updatevideoname"
+zip -q -r9 "$build_dist_dir/lambda/UpdateVideoName.zip" *
 
 echo "------------------------------------------------------------------------------"
 echo "[Rebuild] updatevideostatus"
 echo "------------------------------------------------------------------------------"
-cd $source_dir/lambda/updatevideostatus
-zip -q -r9 $build_dist_dir/lambda/UpdateVideoStatus.zip *
+cd "$source_dir/lambda/updatevideostatus"
+zip -q -r9 "$build_dist_dir/lambda/UpdateVideoStatus.zip" *
 
 echo "------------------------------------------------------------------------------"
 echo "[Rebuild] getburnedvideo"
 echo "------------------------------------------------------------------------------"
-cd $source_dir/lambda/getburnedvideo
-zip -q -r9 $build_dist_dir/lambda/GetBurnedVideo.zip * 
+cd "$source_dir/lambda/getburnedvideo"
+zip -q -r9 "$build_dist_dir/lambda/GetBurnedVideo.zip" * 
 
 echo "------------------------------------------------------------------------------"
 echo "[Rebuild] updateburnedvideopath"
 echo "------------------------------------------------------------------------------"
-cd $source_dir/lambda/updateburnedvideopath
-zip -q -r9 $build_dist_dir/lambda/UpdateBurnedVideoPath.zip *
+cd "$source_dir/lambda/updateburnedvideopath"
+zip -q -r9 "$build_dist_dir/lambda/UpdateBurnedVideoPath.zip" *
 
-# aws s3 cp $build_dist_dir/* 
-
+# aws s3 cp $build_dist_dir/*
 
 
 
