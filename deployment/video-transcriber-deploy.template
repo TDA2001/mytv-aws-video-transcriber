@@ -6,7 +6,7 @@ Mappings:
     SourceCode:
         General:
             S3Bucket: "%%BUCKET_NAME%%"
-            KeyPrefix: "%%SOLUTION_NAME%%/%%VERSION%%"
+            KeyPrefix: "%%SOLUTION_NAME%%/%%VERSION%%/regional-s3-assets"
             S3TemplateBucket: "%%TEMPLATE_BUCKET_NAME%%"
             SolutionName: "%%SOLUTION_NAME%%"
     Solution:
@@ -3220,6 +3220,7 @@ Parameters:
   TranscribeLanguage:
     Type: String
     AllowedValues:
+      - vi-VN
       - en-AU
       - en-US
       - en-GB
@@ -3239,7 +3240,7 @@ Parameters:
       - ko-KR
       - ar-AE
       - ar-SA
-    Default: zh-CN
+    Default: vi-VN
     Description: The language that Transcribe uses
   APIKey:
     Type: String

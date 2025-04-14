@@ -107,6 +107,7 @@
 						</a>
 
 						<div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+							<a class="dropdown-item" onclick="translateWithLanguageCode('vi')">Vietnamese</a>
 							<a class="dropdown-item" onclick="translateWithLanguageCode('zh')">Chinese (Simplified)</a>
 							<a class="dropdown-item" onclick="translateWithLanguageCode('zh-TW')">Chinese
 								(Traditional)</a>
@@ -343,7 +344,7 @@
 		part2Index = captionIndex + 1;
 		var captionEditValue = escapeHtml(captionEdit.value);
 		captionData[part1Index].text = captionEditValue;
-		if (language != 'zh-CN') {
+		if (language != 'vi-VN') {
 			captionData[part1Index].text += " ";
 		}
 		captionData[part1Index].text += captionData[part2Index].text;

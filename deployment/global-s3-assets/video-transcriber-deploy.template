@@ -3220,6 +3220,7 @@ Parameters:
   TranscribeLanguage:
     Type: String
     AllowedValues:
+      - vi-VN
       - en-AU
       - en-US
       - en-GB
@@ -3239,7 +3240,7 @@ Parameters:
       - ko-KR
       - ar-AE
       - ar-SA
-    Default: zh-CN
+    Default: vi-VN
     Description: The language that Transcribe uses
   APIKey:
     Type: String

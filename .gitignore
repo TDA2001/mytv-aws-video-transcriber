@@ -3,5 +3,7 @@ package-lock.json
 **/.DS_Store
 .serverless/
 aws-captions-outputs.json
-site_config.json
+# site_config.json
 data/
+
+README_*.md
