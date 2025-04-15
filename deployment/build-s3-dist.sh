@@ -163,15 +163,15 @@ cp -f node_modules/jquery/dist/jquery.min.js js/
 cp -f node_modules/datatables.net/js/jquery.dataTables.min.js js/
 cp -f node_modules/vanilla-router/dist/vanilla-router.js js/
 cp -R "$source_dir/web/"* "$build_dist_dir/web"
-rm -f js/axios.min.js
-rm -f js/bootstrap.min.js
-rm -f js/dataTables.bootstrap4.min.js
-rm -f js/dropzone.min.js
-rm -f js/FileSaver.min.js
-rm -f js/handlebars.min.js
-rm -f js/jquery.min.js
-rm -f js/jquery.dataTables.min.js
-rm -f js/vanilla-router.js
+# rm -f js/axios.min.js
+# rm -f js/bootstrap.min.js
+# rm -f js/dataTables.bootstrap4.min.js
+# rm -f js/dropzone.min.js
+# rm -f js/FileSaver.min.js
+# rm -f js/handlebars.min.js
+# rm -f js/jquery.min.js
+# rm -f js/jquery.dataTables.min.js
+# rm -f js/vanilla-router.js
 
 echo "------------------------------------------------------------------------------"
 echo "[Rebuild] Lambda function"

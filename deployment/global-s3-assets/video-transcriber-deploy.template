@@ -6,9 +6,9 @@ Mappings:
     SourceCode:
         General:
             S3Bucket: "ant-video-transcriber-dist"
-            KeyPrefix: "video-transcriber/v1.0.0/regional-s3-assets"
-            S3TemplateBucket: "%%TEMPLATE_BUCKET_NAME%%"
-            SolutionName: "%%SOLUTION_NAME%%"
+            KeyPrefix: "video-transcriber/v1.0.0"
+            S3TemplateBucket: "ant-video-transcriber-dist"
+            SolutionName: "video-transcriber"
     Solution:
         Data:
             SendAnonymousUsageData: "Yes"
@@ -3244,6 +3244,7 @@ Parameters:
     Description: The language that Transcribe uses
   APIKey:
     Type: String
+    Default: AntSecureAccessKey2025xyz
     AllowedPattern: '[a-zA-Z0-9]{20,70}'
     ConstraintDescription: 'must only contain letters (uppercase and lowercase) and
       numbers min length: 20 max length: 70'

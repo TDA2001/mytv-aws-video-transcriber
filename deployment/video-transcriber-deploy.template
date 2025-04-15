@@ -6,7 +6,7 @@ Mappings:
     SourceCode:
         General:
             S3Bucket: "%%BUCKET_NAME%%"
-            KeyPrefix: "%%SOLUTION_NAME%%/%%VERSION%%/regional-s3-assets"
+            KeyPrefix: "%%SOLUTION_NAME%%/%%VERSION%%"
             S3TemplateBucket: "%%TEMPLATE_BUCKET_NAME%%"
             SolutionName: "%%SOLUTION_NAME%%"
     Solution:
@@ -3244,6 +3244,7 @@ Parameters:
     Description: The language that Transcribe uses
   APIKey:
     Type: String
+    Default: AntSecureAccessKey2025xyz
     AllowedPattern: '[a-zA-Z0-9]{20,70}'
     ConstraintDescription: 'must only contain letters (uppercase and lowercase) and
       numbers min length: 20 max length: 70'
